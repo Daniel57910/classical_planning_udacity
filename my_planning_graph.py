@@ -2,65 +2,30 @@
 from itertools import chain, combinations
 from aimacode.planning import Action
 from aimacode.utils import expr
-
 from layers import BaseActionLayer, BaseLiteralLayer, makeNoOp, make_node
 import pdb
 
 class ActionLayer(BaseActionLayer):
 
     def _inconsistent_effects(self, actionA, actionB):
-        
-        effect_a, effect_b = self.children[actionA], self.children[actionB] 
-
-        res = [~a for a in effect_a if ~a in effect_b] + \
-          [~b for b in effect_b if ~b in effect_a]
-
-        return(len(res)) 
-
-        """ Return True if an effect of one action negates an effect of the other
-
-        Hints:
-            (1) `~Literal` can be used to logically negate a literal
-            (2) `self.children` contains a map from actions to effects
-
-        See Also
-        --------
-        layers.ActionNode
-        """
-        # TODO: implement this function
-
+        a_inverse, b_inverse = [~a for a in actionA.effects], [~b for b in actionB.effects]
+        return len(
+            [a for a in actionA.effects if a in b_inverse] + \
+                [b for b in actionB.effects if b in a_inverse]
+        )
 
     def _interference(self, actionA, actionB):
-
-        return True
-        """ Return True if the effects of either action negate the preconditions of the other 
-
-        Hints:
-            (1) `~Literal` can be used to logically negate a literal
-            (2) `self.parents` contains a map from actions to preconditions
-        
-        See Also
-        --------
-        layers.ActionNode
-        """
-        # TODO: implement this function
-        raise NotImplementedError
-
+        a_precon_inv, b_precon_inv = [~a for a in actionA.preconditions], [~b for b in actionB.preconditions] 
+        return len(
+            [a for a in actionA.effects if a in b_precon_inv] + \
+                [b for b in actionB.effects if b in a_precon_inv ]
+        )
     def _competing_needs(self, actionA, actionB):
-        """ Return True if any preconditions of the two actions are pairwise mutex in the parent layer
 
-        Hints:
-            (1) `self.parent_layer` contains a reference to the previous literal layer
-            (2) `self.parents` contains a map from actions to preconditions
-        
-        See Also
-        --------
-        layers.ActionNode
-        layers.BaseLayer.parent_layer
-        """
-        # TODO: implement this function
-        raise NotImplementedError
-
+        effect_a, effect_b = self.parents[actionA], self.parents[actionB]
+        literal_layer_state = set([node for node in self.parent_layer])
+        res = literal_layer_state.union(effect_a, effect_b)
+        return res is None
 
 class LiteralLayer(BaseLiteralLayer):
 
