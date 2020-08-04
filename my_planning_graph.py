@@ -22,9 +22,7 @@ class ActionLayer(BaseActionLayer):
         )
     def _competing_needs(self, actionA, actionB):
 
-        effect_a, effect_b = self.parents[actionA], self.parents[actionB]
-        literal_layer_state = set([node for node in self.parent_layer])
-        res = literal_layer_state.union(effect_a, effect_b)
+        return self.is_mutex(actionA, actionB)
         return res is None
 
 class LiteralLayer(BaseLiteralLayer):
@@ -45,9 +43,7 @@ class LiteralLayer(BaseLiteralLayer):
         raise NotImplementedError
 
     def _negation(self, literalA, literalB):
-        print(expr(literalA)) 
-        """ Return True if two literals are negations of each other """
-        # TODO: implement this function
+        return ~literalA == literalB
  
 
 

@@ -162,100 +162,100 @@ class Test_2_InterferenceMutex(BaseMutexTest):
                 """, self.interference_actions[0], self.interference_actions[1], idx))
 
 
-# class Test_3_NegationMutex(BaseMutexTest):
-#     def test_3a_negation_mutex(self):
-#         lits = [self.pos_literals[0], self.neg_literals[0]]
-#         self.assertTrue(self.literal_layer._negation(*lits), chain_dedent("""
-#             The literals '{litA!s}' and '{litB!s}' should be mutually exclusive
-#             by negation: ~'{litA!s}' == '{litB!s}'
-#             """, litA=lits[0], litB=lits[1])
-#         )
+class Test_3_NegationMutex(BaseMutexTest):
+    def test_3a_negation_mutex(self):
+        lits = [self.pos_literals[0], self.neg_literals[0]]
+        self.assertTrue(self.literal_layer._negation(*lits), chain_dedent("""
+            The literals '{litA!s}' and '{litB!s}' should be mutually exclusive
+            by negation: ~'{litA!s}' == '{litB!s}'
+            """, litA=lits[0], litB=lits[1])
+        )
 
-#     def test_3b_negation_mutex(self):
-#         lits = [self.pos_literals[0], self.neg_literals[1]]
-#         self.assertFalse(self.literal_layer._negation(*lits), chain_dedent("""
-#             The literals '{litA!s}' and '{litB!s}' should NOT be mutually exclusive
-#             by negation: ~'{litA!s}' != '{litB!s}'
-#             """, litA=lits[0], litB=lits[1])
-#         )
+    def test_3b_negation_mutex(self):
+        lits = [self.pos_literals[0], self.neg_literals[1]]
+        self.assertFalse(self.literal_layer._negation(*lits), chain_dedent("""
+            The literals '{litA!s}' and '{litB!s}' should NOT be mutually exclusive
+            by negation: ~'{litA!s}' != '{litB!s}'
+            """, litA=lits[0], litB=lits[1])
+        )
         
-#     def test_3c_negation_mutex(self):
-#         # Negation mutexes are static, so if they appear in one layer then they
-#         # should appear in every later layer of the planning graph
-#         litlayer = self.cake_pg.literal_layers[-1]
-#         self.assertTrue(
-#             all(litlayer.is_mutex(l, ~l) for l in self.cake_problem.state_map),
-#             chain_dedent("""
-#                 One or more literal was not marked as mutex with its negation
-#                 in the last layer of the planning graph.
-#             """)
-#         )
+    def test_3c_negation_mutex(self):
+        # Negation mutexes are static, so if they appear in one layer then they
+        # should appear in every later layer of the planning graph
+        litlayer = self.cake_pg.literal_layers[-1]
+        self.assertTrue(
+            all(litlayer.is_mutex(l, ~l) for l in self.cake_problem.state_map),
+            chain_dedent("""
+                One or more literal was not marked as mutex with its negation
+                in the last layer of the planning graph.
+            """)
+        )
 
-class Test_4_CompetingNeedsMutex(BaseMutexTest):
-    def setUp(self):
-        super().setUp()
-        # eat has precondition Have(cake) and bake has precondition ~Have(cake)
-        # which are logical inverses, so eat & bake should be mutex at every
-        # level of the planning graph where both actions appear
-        self.competing_needs_actions = [self.eat_action, self.bake_action]
+# class Test_4_CompetingNeedsMutex(BaseMutexTest):
+#     def setUp(self):
+#         super().setUp()
+#         # eat has precondition Have(cake) and bake has precondition ~Have(cake)
+#         # which are logical inverses, so eat & bake should be mutex at every
+#         # level of the planning graph where both actions appear
+#         self.competing_needs_actions = [self.eat_action, self.bake_action]
 
-        # competing needs tests -- build two copies of the planning graph: one where
-        #  A, B, and C are pairwise mutex, and another where they are not
-        A, B, C = expr('FakeFluent_A'), expr('FakeFluent_B'), expr('FakeFluent_C')
-        self.fake_competing_needs_actions = [
-            make_node(Action(expr('FakeAction(A)'), [set([A]), set()], [set([A]), set()])),
-            make_node(Action(expr('FakeAction(B)'), [set([B]), set()], [set([B]), set()])),
-            make_node(Action(expr('FakeAction(C)'), [set([C]), set()], [set([C]), set()]))
-        ]
-        competing_layer = LiteralLayer([A, B, C], ActionLayer())
-        for a1, a2 in combinations([A, B, C], 2): competing_layer.set_mutex(a1, a2)
-        self.competing_action_layer = ActionLayer(competing_layer.parent_layer, competing_layer, False, True)
-        for action in self.fake_competing_needs_actions:
-            self.competing_action_layer.add(action)
-            competing_layer |= action.effects
-            competing_layer.add_outbound_edges(action, action.preconditions)
-            self.competing_action_layer.add_inbound_edges(action, action.preconditions)
-            self.competing_action_layer.add_outbound_edges(action, action.effects)
+#         # competing needs tests -- build two copies of the planning graph: one where
+#         #  A, B, and C are pairwise mutex, and another where they are not
+#         A, B, C = expr('FakeFluent_A'), expr('FakeFluent_B'), expr('FakeFluent_C')
+#         self.fake_competing_needs_actions = [
+#             make_node(Action(expr('FakeAction(A)'), [set([A]), set()], [set([A]), set()])),
+#             make_node(Action(expr('FakeAction(B)'), [set([B]), set()], [set([B]), set()])),
+#             make_node(Action(expr('FakeAction(C)'), [set([C]), set()], [set([C]), set()]))
+#         ]
+#         competing_layer = LiteralLayer([A, B, C], ActionLayer())
+#         for a1, a2 in combinations([A, B, C], 2): competing_layer.set_mutex(a1, a2)
+#         self.competing_action_layer = ActionLayer(competing_layer.parent_layer, competing_layer, False, True)
+#         for action in self.fake_competing_needs_actions:
+#             self.competing_action_layer.add(action)
+#             competing_layer |= action.effects
+#             competing_layer.add_outbound_edges(action, action.preconditions)
+#             self.competing_action_layer.add_inbound_edges(action, action.preconditions)
+#             self.competing_action_layer.add_outbound_edges(action, action.effects)
 
-        not_competing_layer = LiteralLayer([A, B, C], ActionLayer())
-        self.not_competing_action_layer = ActionLayer(not_competing_layer.parent_layer, not_competing_layer, False, True)
-        for action in self.fake_competing_needs_actions:
-            self.not_competing_action_layer.add(action)
-            not_competing_layer |= action.effects
-            not_competing_layer.add_outbound_edges(action, action.preconditions)
-            self.not_competing_action_layer.add_inbound_edges(action, action.preconditions)
-            self.not_competing_action_layer.add_outbound_edges(action, action.effects)
+#         not_competing_layer = LiteralLayer([A, B, C], ActionLayer())
+#         self.not_competing_action_layer = ActionLayer(not_competing_layer.parent_layer, not_competing_layer, False, True)
+#         for action in self.fake_competing_needs_actions:
+#             self.not_competing_action_layer.add(action)
+#             not_competing_layer |= action.effects
+#             not_competing_layer.add_outbound_edges(action, action.preconditions)
+#             self.not_competing_action_layer.add_inbound_edges(action, action.preconditions)
+#             self.not_competing_action_layer.add_outbound_edges(action, action.effects)
 
-    def test_4a_competing_needs_mutex(self):
-        acts = [self.no_ops[0], self.no_ops[2]]
-        self.assertFalse(self.action_layer._competing_needs(*acts),
-            "'{!s}' and '{!s}' should NOT be mutually exclusive by competing needs".format(*acts))
+#     def test_4a_competing_needs_mutex(self):
+#         acts = [self.no_ops[0], self.no_ops[2]]
+#         self.assertFalse(self.action_layer._competing_needs(*acts),
+#             "'{!s}' and '{!s}' should NOT be mutually exclusive by competing needs".format(*acts))
 
-    def test_4b_competing_needs_mutex(self):
-        acts = [self.no_ops[0], self.no_ops[1]]
-        self.assertTrue(self.action_layer._competing_needs(*acts),
-            "'{!s}' and '{!s}' should be mutually exclusive by competing needs".format(*acts))
+#     def test_4b_competing_needs_mutex(self):
+#         acts = [self.no_ops[0], self.no_ops[1]]
+#         self.assertTrue(self.action_layer._competing_needs(*acts),
+#             "'{!s}' and '{!s}' should be mutually exclusive by competing needs".format(*acts))
 
-    def test_4c_competing_needs_mutex(self):
-        for acts in combinations(self.fake_competing_needs_actions, 2):
-            self.assertFalse(self.not_competing_action_layer._competing_needs(*acts),
-                ("'{!s}' and '{!s}' should NOT be mutually exclusive by competing needs unless " +
-                 "every pair of actions is mutex in the parent layer").format(*acts))
+#     def test_4c_competing_needs_mutex(self):
+#         for acts in combinations(self.fake_competing_needs_actions, 2):
+#             self.assertFalse(self.not_competing_action_layer._competing_needs(*acts),
+#                 ("'{!s}' and '{!s}' should NOT be mutually exclusive by competing needs unless " +
+#                  "every pair of actions is mutex in the parent layer").format(*acts))
 
-    def test_4d_competing_needs_mutex(self):
-        for acts in combinations(self.fake_competing_needs_actions, 2):
-            self.assertTrue(self.competing_action_layer._competing_needs(*acts),
-                ("'{!s}' and '{!s}' should be mutually exclusive by competing needs if every " +
-                "pair of actions is mutex in the parent layer").format(*acts))
+#     def test_4d_competing_needs_mutex(self):
+#         for acts in combinations(self.fake_competing_needs_actions, 2):
+#             self.assertTrue(self.competing_action_layer._competing_needs(*acts),
+#                 ("'{!s}' and '{!s}' should be mutually exclusive by competing needs if every " +
+#                 "pair of actions is mutex in the parent layer").format(*acts))
 
-    def test_4e_competing_needs_mutex(self):
-        # competing needs mutexes are dynamic -- they only appear in some levels of the planning graph
-        for idx, layer in enumerate(self.cake_pg.action_layers):
-            if set(self.competing_needs_actions) <= layer:
-                self.assertTrue(layer.is_mutex(*self.competing_needs_actions),
-                    ("Actions {} and {} were not mutex in layer {} of the planning graph").format(
-                        self.competing_needs_actions[0], self.competing_needs_actions[1], idx)
-                )
+#     def test_4e_competing_needs_mutex(self):
+#         # competing needs mutexes are dynamic -- they only appear in some levels of the planning graph
+#         for idx, layer in enumerate(self.cake_pg.action_layers):
+#             if set(self.competing_needs_actions) <= layer:
+#                 self.assertTrue(layer.is_mutex(*self.competing_needs_actions),
+#                     ("Actions {} and {} were not mutex in layer {} of the planning graph").format(
+#                         self.competing_needs_actions[0], self.competing_needs_actions[1], idx)
+#                 )
         
 
 # class Test_5_InconsistentSupportMutex(BaseMutexTest):
