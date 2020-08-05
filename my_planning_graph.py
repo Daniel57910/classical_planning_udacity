@@ -27,7 +27,6 @@ class ActionLayer(BaseActionLayer):
         return False
             
    
-import time
 class LiteralLayer(BaseLiteralLayer):
     
     def _inconsistent_support(self, literalA, literalB):
