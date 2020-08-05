@@ -20,11 +20,13 @@ class ActionLayer(BaseActionLayer):
             [a for a in actionA.effects if a in b_precon_inv] + \
                 [b for b in actionB.effects if b in a_precon_inv ]
         )
-    def _competing_needs(self, actionA, actionB):
-
-        return self.is_mutex(actionA, actionB)
-        return res is None
-
+    def _competing_needs(self, actionA, actionB):  
+        for a, b in zip(actionA.preconditions, actionB.preconditions):
+            if self.parent_layer.is_mutex(a, b):
+                return True
+        return False
+            
+   
 class LiteralLayer(BaseLiteralLayer):
 
     def _inconsistent_support(self, literalA, literalB):
