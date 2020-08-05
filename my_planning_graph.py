@@ -27,9 +27,26 @@ class ActionLayer(BaseActionLayer):
         return False
             
    
+import time
 class LiteralLayer(BaseLiteralLayer):
-
+    
     def _inconsistent_support(self, literalA, literalB):
+
+        parent_action_a, parent_action_b = self.parents[literalA], self.parents[literalB]
+        if not (parent_action_a and parent_action_b):
+            return False
+
+        if any([a for a in parent_action_a if a in parent_action_b]):
+            return False
+        
+        if any(a for a in parent_action_a for b in parent_action_b if not self.parent_layer.is_mutex(a, b)):
+            return False
+        
+        return True
+        
+
+
+
         """ Return True if all ways to achieve both literals are pairwise mutex in the parent layer
 
         Hints:

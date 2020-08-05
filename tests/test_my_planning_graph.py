@@ -244,7 +244,6 @@ class Test_4_CompetingNeedsMutex(BaseMutexTest):
 
     def test_4d_competing_needs_mutex(self):
         for acts in combinations(self.fake_competing_needs_actions, 2):
-            print(acts)
             self.assertTrue(self.competing_action_layer._competing_needs(*acts),
                 ("'{!s}' and '{!s}' should be mutually exclusive by competing needs if every " +
                 "pair of actions is mutex in the parent layer").format(*acts))
@@ -259,36 +258,36 @@ class Test_4_CompetingNeedsMutex(BaseMutexTest):
                 )
         
 
-# class Test_5_InconsistentSupportMutex(BaseMutexTest):
-#     def setUp(self):
-#         super().setUp()
-#         self.ac_problem = air_cargo_p1()
-#         self.ac_pg_serial = PlanningGraph(self.ac_problem, self.ac_problem.initial).fill()
-#         # In(C1, P2) and In(C2, P1) have inconsistent support when they first appear in
-#         # the air cargo problem, 
-#         self.inconsistent_support_literals = [expr("In(C1, P2)"), expr("In(C2, P1)")]
+class Test_5_InconsistentSupportMutex(BaseMutexTest):
+    def setUp(self):
+        super().setUp()
+        self.ac_problem = air_cargo_p1()
+        self.ac_pg_serial = PlanningGraph(self.ac_problem, self.ac_problem.initial).fill()
+        # In(C1, P2) and In(C2, P1) have inconsistent support when they first appear in
+        # the air cargo problem, 
+        self.inconsistent_support_literals = [expr("In(C1, P2)"), expr("In(C2, P1)")]
 
-#     def test_5a_inconsistent_support_mutex(self):
-#         # inconsistent support mutexes are dynamic -- they should not remain mutex at the last layer
-#         litA, litB = self.inconsistent_support_literals
-#         litlayer = self.ac_pg_serial.literal_layers[2]
-#         self.assertTrue(litlayer._inconsistent_support(litA, litB),
-#             chain_dedent("""
-#             The literals '{!s}' and '{!s}' should be mutually exclusive by inconsistent support
-#             in the second layer. All of the actions actions that produce '{!s}': {!s}
-#             and all of the actions that produce '{!s}': {!s} are pairwise mutex in the parent layer.
-#             """, litA, litB, litA, litlayer.parents[litA], litB, litlayer.parents[litB])
-#         )
+    def test_5a_inconsistent_support_mutex(self):
+        # inconsistent support mutexes are dynamic -- they should not remain mutex at the last layer
+        litA, litB = self.inconsistent_support_literals
+        litlayer = self.ac_pg_serial.literal_layers[2]
+        self.assertTrue(litlayer._inconsistent_support(litA, litB),
+            chain_dedent("""
+            The literals '{!s}' and '{!s}' should be mutually exclusive by inconsistent support
+            in the second layer. All of the actions actions that produce '{!s}': {!s}
+            and all of the actions that produce '{!s}': {!s} are pairwise mutex in the parent layer.
+            """, litA, litB, litA, litlayer.parents[litA], litB, litlayer.parents[litB])
+        )
         
-#     def test_5b_inconsistent_support_mutex(self):
-#         litA, litB = self.inconsistent_support_literals
-#         litlayer = self.ac_pg_serial.literal_layers[-2]
-#         self.assertFalse(litlayer._inconsistent_support(litA, litB), chain_dedent("""
-#             The literals '{!s}' and '{!s}' should NOT be mutually exclusive by inconsistent support
-#             in the penultimate layer. At least one of the actions that produce '{!s}': {!s}
-#             and one of the actions that produce '{!s}': {!s} should not be mutex in the parent layer.
-#             """, litA, litB, litA, litlayer.parents[litA], litB, litlayer.parents[litB])
-#         )
+    def test_5b_inconsistent_support_mutex(self):
+        litA, litB = self.inconsistent_support_literals
+        litlayer = self.ac_pg_serial.literal_layers[-2]
+        self.assertFalse(litlayer._inconsistent_support(litA, litB), chain_dedent("""
+            The literals '{!s}' and '{!s}' should NOT be mutually exclusive by inconsistent support
+            in the penultimate layer. At least one of the actions that produce '{!s}': {!s}
+            and one of the actions that produce '{!s}': {!s} should not be mutex in the parent layer.
+            """, litA, litB, litA, litlayer.parents[litA], litB, litlayer.parents[litB])
+        )
 
 # class BaseHeuristicTest(unittest.TestCase):
 #     def setUp(self):
