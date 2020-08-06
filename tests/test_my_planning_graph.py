@@ -289,24 +289,24 @@ class Test_5_InconsistentSupportMutex(BaseMutexTest):
             """, litA, litB, litA, litlayer.parents[litA], litB, litlayer.parents[litB])
         )
 
-# class BaseHeuristicTest(unittest.TestCase):
-#     def setUp(self):
-#         self.cake_problem = have_cake()
-#         self.ac_problem_1 = air_cargo_p1()
-#         self.ac_problem_2 = air_cargo_p2()
-#         self.ac_problem_3 = air_cargo_p3()
-#         self.ac_problem_4 = air_cargo_p4()
-#         self.cake_node = Node(self.cake_problem.initial)
-#         self.ac_node_1 = Node(self.ac_problem_1.initial)
-#         self.ac_node_2 = Node(self.ac_problem_2.initial)
-#         self.ac_node_3 = Node(self.ac_problem_3.initial)
-#         self.ac_node_4 = Node(self.ac_problem_4.initial)
-#         self.msg = "Make sure all your mutex tests pass before troubleshooting this function."
+class BaseHeuristicTest(unittest.TestCase):
+    def setUp(self):
+        self.cake_problem = have_cake()
+        self.ac_problem_1 = air_cargo_p1()
+        self.ac_problem_2 = air_cargo_p2()
+        self.ac_problem_3 = air_cargo_p3()
+        self.ac_problem_4 = air_cargo_p4()
+        self.cake_node = Node(self.cake_problem.initial)
+        self.ac_node_1 = Node(self.ac_problem_1.initial)
+        self.ac_node_2 = Node(self.ac_problem_2.initial)
+        self.ac_node_3 = Node(self.ac_problem_3.initial)
+        self.ac_node_4 = Node(self.ac_problem_4.initial)
+        self.msg = "Make sure all your mutex tests pass before troubleshooting this function."
 
 
-# class Test_6_MaxLevelHeuristic(BaseHeuristicTest):
-#     def test_6a_maxlevel(self):
-#         self.assertEqual(self.cake_problem.h_pg_maxlevel(self.cake_node), 1, self.msg)
+class Test_6_MaxLevelHeuristic(BaseHeuristicTest):
+    def test_6a_maxlevel(self):
+        self.assertEqual(self.cake_problem.h_pg_maxlevel(self.cake_node), 1, self.msg)
 
 #     def test_6b_maxlevel(self):
 #         self.assertEqual(self.ac_problem_1.h_pg_maxlevel(self.ac_node_1), 2, self.msg)

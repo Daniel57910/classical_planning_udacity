@@ -42,23 +42,6 @@ class LiteralLayer(BaseLiteralLayer):
             return False
         
         return True
-        
-
-
-
-        """ Return True if all ways to achieve both literals are pairwise mutex in the parent layer
-
-        Hints:
-            (1) `self.parent_layer` contains a reference to the previous action layer
-            (2) `self.parents` contains a map from literals to actions in the parent layer
-
-        See Also
-        --------
-        layers.BaseLayer.parent_layer
-        """
-        # TODO: implement this function
-        return True
-        raise NotImplementedError
 
     def _negation(self, literalA, literalB):
         return ~literalA == literalB
@@ -101,6 +84,7 @@ class PlanningGraph:
         self.action_layers = []
 
     def h_levelsum(self):
+
         """ Calculate the level sum heuristic for the planning graph
 
         The level sum is the sum of the level costs of all the goal literals
@@ -129,6 +113,12 @@ class PlanningGraph:
         raise NotImplementedError
 
     def h_maxlevel(self):
+        print("\n")
+        level_count = 0
+        for i, level in enumerate(self.literal_layers):
+            level_count += len([a for a in self.goal for b in level if a==b])
+        return level_count
+
         """ Calculate the max level heuristic for the planning graph
 
         The max level is the largest level cost of any single goal fluent.
