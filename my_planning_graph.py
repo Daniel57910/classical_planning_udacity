@@ -113,9 +113,8 @@ class PlanningGraph:
         raise NotImplementedError
 
     def h_maxlevel(self):
-        print("\n")
         level_count = 0
-        for i, level in enumerate(self.literal_layers):
+        for level in self.literal_layers:
             level_count += len([a for a in self.goal for b in level if a==b])
         return level_count
 
