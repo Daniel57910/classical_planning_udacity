@@ -86,32 +86,15 @@ class PlanningGraph:
 
     def h_levelsum(self):
 
-        """ Calculate the level sum heuristic for the planning graph
-
-        The level sum is the sum of the level costs of all the goal literals
-        combined. The "level cost" to achieve any single goal literal is the
-        level at which the literal first appears in the planning graph. Note
-        that the level cost is **NOT** the minimum number of actions to
-        achieve a single goal literal.
+        self.fill()
+        goal_levels = {}
         
-        For example, if Goal_1 first appears in level 0 of the graph (i.e.,
-        it is satisfied at the root of the planning graph) and Goal_2 first
-        appears in level 3, then the levelsum is 0 + 3 = 3.
-
-        Hints
-        -----
-          (1) See the pseudocode folder for help on a simple implementation
-          (2) You can implement this function more efficiently than the
-              sample pseudocode if you expand the graph one level at a time
-              and accumulate the level cost of each goal rather than filling
-              the whole graph at the start.
-
-        See Also
-        --------
-        Russell-Norvig 10.3.1 (3rd Edition)
-        """
-        # TODO: implement this function
-        raise NotImplementedError
+        for goal in self.goal:
+            for i, layer in enumerate(self.literal_layers):
+                if goal in [l for l in layer] and goal not in goal_levels:
+                    goal_levels[goal] = i
+        
+        return sum(goal_levels.values())
 
     def h_maxlevel(self):
 
