@@ -125,41 +125,6 @@ class PlanningGraph:
         
         return max(goal_levels.values())
             
-                
-                   
- 
-
-
-            
-        # need logic for removing goal if met at earlier level
-
-
-        """ Calculate the max level heuristic for the planning graph
-
-        The max level is the largest level cost of any single goal fluent.
-        The "level cost" to achieve any single goal literal is the level at
-        which the literal first appears in the planning graph. Note that
-        the level cost is **NOT** the minimum number of actions to achieve
-        a single goal literal.
-
-        For example, if Goal1 first appears in level 1 of the graph and
-        Goal2 first appears in level 3, then the levelsum is max(1, 3) = 3.
-
-        Hints
-        -----
-          (1) See the pseudocode folder for help on a simple implementation
-          (2) You can implement this function more efficiently if you expand
-              the graph one level at a time until the last goal is met rather
-              than filling the whole graph at the start.
-
-        See Also
-        --------
-        Russell-Norvig 10.3.1 (3rd Edition)
-
-        Notes
-        -----
-        WARNING: you should expect long runtimes using this heuristic with A*
-        """
 
     def h_setlevel(self):
         """ Calculate the set level heuristic for the planning graph
