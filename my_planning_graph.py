@@ -3,6 +3,7 @@ from itertools import chain, combinations
 from aimacode.planning import Action
 from aimacode.utils import expr
 from layers import BaseActionLayer, BaseLiteralLayer, makeNoOp, make_node
+import copy
 import pdb
 
 class ActionLayer(BaseActionLayer):
@@ -26,7 +27,7 @@ class ActionLayer(BaseActionLayer):
                 return True
         return False
             
-   
+import time
 class LiteralLayer(BaseLiteralLayer):
     
     def _inconsistent_support(self, literalA, literalB):
@@ -113,10 +114,25 @@ class PlanningGraph:
         raise NotImplementedError
 
     def h_maxlevel(self):
-        level_count = 0
-        for level in self.literal_layers:
-            level_count += len([a for a in self.goal for b in level if a==b])
-        return level_count
+
+        self.fill()
+        goal_levels = {}
+        
+        for goal in self.goal:
+            for i, layer in enumerate(self.literal_layers):
+                if goal in [l for l in layer] and goal not in goal_levels:
+                    goal_levels[goal] = i
+        
+        return max(goal_levels.values())
+            
+                
+                   
+ 
+
+
+            
+        # need logic for removing goal if met at earlier level
+
 
         """ Calculate the max level heuristic for the planning graph
 
@@ -144,8 +160,6 @@ class PlanningGraph:
         -----
         WARNING: you should expect long runtimes using this heuristic with A*
         """
-        # TODO: implement maxlevel heuristic
-        raise NotImplementedError
 
     def h_setlevel(self):
         """ Calculate the set level heuristic for the planning graph

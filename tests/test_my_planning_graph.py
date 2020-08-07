@@ -311,8 +311,8 @@ class Test_6_MaxLevelHeuristic(BaseHeuristicTest):
     def test_6b_maxlevel(self):
         self.assertEqual(self.ac_problem_1.h_pg_maxlevel(self.ac_node_1), 2, self.msg)
 
-#     def test_6c_maxlevel(self):
-#         self.assertEqual(self.ac_problem_2.h_pg_maxlevel(self.ac_node_2), 2, self.msg)
+    # def test_6c_maxlevel(self):
+    #     self.assertEqual(self.ac_problem_2.h_pg_maxlevel(self.ac_node_2), 2, self.msg)
 
 #     def test_6d_maxlevel(self):
 #         self.assertEqual(self.ac_problem_3.h_pg_maxlevel(self.ac_node_3), 3, self.msg)
