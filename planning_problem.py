@@ -29,6 +29,7 @@ class BasePlanningProblem(Problem):
 
     @lru_cache()
     def h_pg_levelsum(self, node):
+        
         """ This heuristic uses a planning graph representation of the problem
         state space to estimate the sum of the number of actions that must be
         carried out from the current state in order to satisfy each individual

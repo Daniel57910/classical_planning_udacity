@@ -338,9 +338,9 @@ class Test_7_LevelSumHeuristic(BaseHeuristicTest):
         self.assertEqual(self.ac_problem_4.h_pg_levelsum(self.ac_node_4), 13, self.msg)
 
 
-# class Test_8_SetLevelHeuristic(BaseHeuristicTest):
-#     def test_8a_setlevel(self):
-#         self.assertEqual(self.cake_problem.h_pg_setlevel(self.cake_node), 2, self.msg)
+class Test_8_SetLevelHeuristic(BaseHeuristicTest):
+    def test_8a_setlevel(self):
+        self.assertEqual(self.cake_problem.h_pg_setlevel(self.cake_node), 2, self.msg)
 
 #     def test_8b_setlevel(self):
 #         self.assertEqual(self.ac_problem_1.h_pg_setlevel(self.ac_node_1), 4, self.msg)

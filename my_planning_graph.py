@@ -110,9 +110,21 @@ class PlanningGraph:
             
 
     def h_setlevel(self):
+
+
+
+        self.fill()
+        print("\n")
+        for i, layer in enumerate(self.literal_layers):
+            time.sleep(1)
+            print(self.goal, set(layer))
+            if self.goal.issubset(set(layer)):
+                if not layer.is_mutex(list(self.goal)[0], list(self.goal)[1]):
+                    return i
+            
         """ Calculate the set level heuristic for the planning graph
 
-        The set level of a planning graph is the first level where all goals
+        The set level of a planning graph is the first ilevel where all goals
         appear such that no pair of goal literals are mutex in the last
         layer of the planning graph.
 
