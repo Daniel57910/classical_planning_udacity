@@ -10,29 +10,27 @@ class ActionLayer(BaseActionLayer):
 
     def _inconsistent_effects(self, actionA, actionB):
         a_inverse, b_inverse = [~a for a in actionA.effects], [~b for b in actionB.effects]
-        return len(
+        return any(
             [a for a in actionA.effects if a in b_inverse] + \
                 [b for b in actionB.effects if b in a_inverse]
         )
 
     def _interference(self, actionA, actionB):
         a_precon_inv, b_precon_inv = [~a for a in actionA.preconditions], [~b for b in actionB.preconditions] 
-        return len(
+        return any(
             [a for a in actionA.effects if a in b_precon_inv] + \
                 [b for b in actionB.effects if b in a_precon_inv ]
         )
+
     def _competing_needs(self, actionA, actionB):  
-        for a, b in zip(actionA.preconditions, actionB.preconditions):
-            if self.parent_layer.is_mutex(a, b):
-                return True
-        return False
+        return any([a for a in actionA.preconditions for b in actionB.preconditions if self.parent_layer.is_mutex(a, b)])
             
-import time
 class LiteralLayer(BaseLiteralLayer):
     
     def _inconsistent_support(self, literalA, literalB):
 
         parent_action_a, parent_action_b = self.parents[literalA], self.parents[literalB]
+
         if not (parent_action_a and parent_action_b):
             return False
 
@@ -110,17 +108,6 @@ class PlanningGraph:
             
 
     def h_setlevel(self):
-
-
-
-        self.fill()
-        print("\n")
-        for i, layer in enumerate(self.literal_layers):
-            time.sleep(1)
-            print(self.goal, set(layer))
-            if self.goal.issubset(set(layer)):
-                if not layer.is_mutex(list(self.goal)[0], list(self.goal)[1]):
-                    return i
             
         """ Calculate the set level heuristic for the planning graph
 
@@ -143,12 +130,22 @@ class PlanningGraph:
         -----
         WARNING: you should expect long runtimes using this heuristic on complex problems
         """
-        # TODO: implement setlevel heuristic
-        raise NotImplementedError
+
+        self.fill()
+        for i, layer in enumerate(self.literal_layers):
+            if self.goal.issubset(set(layer)):
+                if not self._mutex_goals(self.goal, layer):
+                    return i
+     
+    def _mutex_goals(self, goal, layer):
+        return any([a for a in goal for b in goal if layer.is_mutex(a, b)])
+        
+
 
     ##############################################################################
     #                     DO NOT MODIFY CODE BELOW THIS LINE                     #
     ##############################################################################
+
 
     def fill(self, maxlevels=-1):
         """ Extend the planning graph until it is leveled, or until a specified number of
