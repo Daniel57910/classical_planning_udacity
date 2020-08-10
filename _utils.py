@@ -16,7 +16,9 @@ class PrintableProblem(InstrumentedProblem):
             len(self.problem.actions_list), self.succs, self.goal_tests, self.states)
 
 
-def run_search(problem, search_function, parameter=None):
+def run_search(problem, search_function, parameter=None, pname=None, sname=None):
+
+    problem_dict = {}
     ip = PrintableProblem(problem)
     start = timer()
     if parameter is not None:
@@ -26,9 +28,15 @@ def run_search(problem, search_function, parameter=None):
     end = timer()
     print("\n# Actions   Expansions   Goal Tests   New Nodes")
     print("{}\n".format(ip))
-    show_solution(node, end - start)
+    problem_dict["PROBLEM_NAME"] = pname
+    problem_dict["SOLUTION_NAME"] = sname
+    problem_dict["ACTIONS_LENGTH"] = len(ip.problem.actions_list)
+    problem_dict["EXPANSIONS"] = ip.succs
+    problem_dict["GOAL_TESTS"] = ip.goal_tests
+    problem_dict["STATES"] = ip.states
+    # show_solution(node, end - start)
     print()
-
+    return problem_dict 
 
 def show_solution(node, elapsed_time):
     print("Plan length: {}  Time elapsed in seconds: {}".format(len(node.solution()), elapsed_time))

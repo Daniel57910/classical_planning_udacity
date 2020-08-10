@@ -1,4 +1,4 @@
-
+import pandas as pd
 import argparse
 
 from aimacode.search import (breadth_first_search, astar_search,
@@ -67,6 +67,7 @@ def manual():
 
 
 def main(p_choices, s_choices):
+    problem_list = []
     problems = [PROBLEMS[i-1] for i in map(int, p_choices)]
     searches = [SEARCHES[i-1] for i in map(int, s_choices)]
 
@@ -77,7 +78,11 @@ def main(p_choices, s_choices):
 
             problem_instance = problem_fn()
             heuristic_fn = None if not heuristic else getattr(problem_instance, heuristic)
-            run_search(problem_instance, search_fn, heuristic_fn)
+            problem_dict = run_search(problem_instance, search_fn, heuristic_fn, pname, sname)
+            problem_list.append(problem_dict)
+
+    res_df = pd.DataFrame(problem_list)
+    print(res_df.head(50))
 
 
 if __name__=="__main__":
