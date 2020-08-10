@@ -1,6 +1,5 @@
-import pandas as pd
 import argparse
-
+import os
 from aimacode.search import (breadth_first_search, astar_search,
     breadth_first_tree_search, depth_first_graph_search, uniform_cost_search,
     greedy_best_first_graph_search, depth_limited_search,
@@ -8,6 +7,8 @@ from aimacode.search import (breadth_first_search, astar_search,
 from air_cargo_problems import air_cargo_p1, air_cargo_p2, air_cargo_p3, air_cargo_p4
 
 from _utils import run_search
+
+import pdb
 
     ##############################################################################
     #                 YOU DO NOT NEED TO MODIFY CODE IN THIS FILE                #
@@ -81,9 +82,10 @@ def main(p_choices, s_choices):
             problem_dict = run_search(problem_instance, search_fn, heuristic_fn, pname, sname)
             problem_list.append(problem_dict)
 
-    res_df = pd.DataFrame(problem_list)
-    print(res_df.head(50))
-
+    print("\n")
+    for problem in problem_list:
+        print(problem)
+    pdb.set_trace()
 
 if __name__=="__main__":
     parser = argparse.ArgumentParser(description="Solve air cargo planning problems " + 
