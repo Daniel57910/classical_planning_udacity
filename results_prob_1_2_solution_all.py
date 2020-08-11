@@ -13,6 +13,7 @@ def set_plot(x, y, x_label, y_label, title):
     pos = np.arange(len(x))
     fig, ax1 = plt.subplots()
     ax1.bar(x, y)
+    ax1.set_title(title)
     ax1.tick_params(axis='x', direction='out', rotation=90)
 
 
