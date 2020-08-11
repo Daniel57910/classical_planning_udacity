@@ -13,6 +13,8 @@ def set_plot(x, y, x_label, y_label, title):
     pos = np.arange(len(x))
     fig, ax1 = plt.subplots()
     ax1.bar(x, y)
+    ax1.set_xlabel(x_label)
+    ax1.set_ylabel(y_label)
     ax1.set_title(title)
     ax1.tick_params(axis='x', direction='out', rotation=90)
 
@@ -36,5 +38,5 @@ print(df1_subset["EXPANSIONS"])
 for sub in df1_subset:
     current = df1_subset[sub]
     x, Y = current["SOLUTION_NAME"], current[sub]
-    set_plot(x, Y, sub, "SOLUTION_NAME", f"{sub} by solution")
+    set_plot(x, Y, "SOLUTION", sub, f"{sub} by solution")
 
