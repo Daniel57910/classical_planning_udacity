@@ -15,8 +15,9 @@ class PrintableProblem(InstrumentedProblem):
         return '{:^10d}  {:^10d}  {:^10d}  {:^10d}'.format(
             len(self.problem.actions_list), self.succs, self.goal_tests, self.states)
 
+import pdb
 
-def run_search(problem, search_function, parameter=None, pname=None, sname=None):
+def run_search(problem, search_function, parameter=None, pname=None, sname=None, heuristic=None):
 
     problem_dict = {}
     ip = PrintableProblem(problem)
@@ -34,6 +35,8 @@ def run_search(problem, search_function, parameter=None, pname=None, sname=None)
     problem_dict["EXPANSIONS"] = ip.succs
     problem_dict["GOAL_TESTS"] = ip.goal_tests
     problem_dict["STATES"] = ip.states
+    if heuristic:
+        problem_dict["SOLUTION_NAME"] += ": "+ heuristic
     # show_solution(node, end - start)
     print()
     return problem_dict 

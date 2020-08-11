@@ -79,7 +79,7 @@ def main(p_choices, s_choices):
 
             problem_instance = problem_fn()
             heuristic_fn = None if not heuristic else getattr(problem_instance, heuristic)
-            problem_dict = run_search(problem_instance, search_fn, heuristic_fn, pname, sname)
+            problem_dict = run_search(problem_instance, search_fn, heuristic_fn, pname, sname, heuristic)
             problem_list.append(problem_dict)
 
     print("\n")
