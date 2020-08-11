@@ -19,6 +19,12 @@ def set_plot(x, y, x_label, y_label, title):
 
     plt.show()
 
+def plot_problem(subset):
+    for sub in subset:
+        current = subset[sub]
+        x, Y = current["SOLUTION_NAME"], current[sub]
+        set_plot(x, Y, "SOLUTION", sub, f"{sub} by solution")
+
 def main():
     df = pd.DataFrame(problem_1)
     subset_list = ["EXPANSIONS", "GOAL_TESTS", "STATES"]
@@ -30,10 +36,9 @@ def main():
     for sub in subset_list:
         df1_subset[sub] = return_subset(df1, sub)
 
-    for sub in df1_subset:
-        current = df1_subset[sub]
-        x, Y = current["SOLUTION_NAME"], current[sub]
-        set_plot(x, Y, "SOLUTION", sub, f"{sub} by solution")
+    # problem 1 
+    plot_problem(df1_subset)
+    # problem 2
 
 
 main()
