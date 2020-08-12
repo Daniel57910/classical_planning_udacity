@@ -16,7 +16,6 @@ def set_plot(x, y, x_label, y_label, title):
     ax1.set_ylabel(y_label)
     ax1.set_title(title)
     ax1.tick_params(axis='x', direction='out', rotation=90)
-
     plt.show()
 
 def main():
